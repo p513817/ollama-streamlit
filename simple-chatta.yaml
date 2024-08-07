@@ -1,0 +1,46 @@
+name: chatta
+networks:
+  chatta:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.55.0/24
+          gateway: 192.168.55.1
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - .:/code
+      - ./ollama:/root/.ollama
+    container_name: ollama
+    pull_policy: always
+    tty: true
+    restart: always
+    networks: 
+      chatta:
+        ipv4_address: 192.168.55.10
+    ports:
+      - 11434:11434
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+  simple-ui:
+    image: simple-ui
+    build: 
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: simple-ui
+    restart: always
+    ports:
+      - 8501:8501
+    networks: 
+      chatta:
+        ipv4_address: 192.168.55.11
+    environment:
+      - OLLAMA_PORT=11434
+      - OLLAMA_HOST=192.168.55.10
