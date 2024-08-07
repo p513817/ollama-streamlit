@@ -7,7 +7,18 @@ def main():
     OH = OllamaHandler()
 
     # Header
-    st.header("Chatta-ChatBot")
+    st.header("Chatta")
+    with st.expander("More details ...", expanded=True, icon="👋"):
+        col1, col2 = st.columns([4, 1])
+        with col1:
+            st.write("""
+                `Chatta` is a simple chatbot demo with `Ollama` and `Streamlit`.
+                Easy usage with `Docker Compose`and clear python code.
+
+                Github: [p513817/ollama-streamlit](https://github.com/p513817/ollama-streamlit)
+            """)
+        with col2:
+            st.image("assets/chatta-qrcode.png", width=100)
 
     # Chat Input
     if "messages" not in st.session_state:
