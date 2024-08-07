@@ -1,6 +1,13 @@
 import streamlit as st
 from chatta_app.handler import OllamaHandler
 
+DESC = """
+`Chatta` is a simple chatbot demo with `Ollama` and `Streamlit`.
+Easy usage with `Docker Compose`and clear python code.
+
+Visit Github Repository: [p513817/ollama-streamlit](https://github.com/p513817/ollama-streamlit)
+"""
+
 
 def main():
     # Global Parameters
@@ -11,14 +18,15 @@ def main():
     with st.expander("More details ...", expanded=True, icon="👋"):
         col1, col2 = st.columns([4, 1])
         with col1:
-            st.write("""
-                `Chatta` is a simple chatbot demo with `Ollama` and `Streamlit`.
-                Easy usage with `Docker Compose`and clear python code.
-
-                Github: [p513817/ollama-streamlit](https://github.com/p513817/ollama-streamlit)
-            """)
+            st.write(DESC)
         with col2:
-            st.image("assets/chatta-qrcode.png", width=100)
+            try:
+                st.image("assets/chatta-qrcode.png", width=100)
+            except Exception:
+                st.image(
+                    "https://github.com/p513817/ollama-streamlit/blob/master/assets/chatta-qrcode.png?raw=true",
+                    width=100,
+                )
 
     # Chat Input
     if "messages" not in st.session_state:
@@ -40,6 +48,10 @@ def main():
         # Display assistant response in chat message container
         with st.chat_message("assistant"):
             try:
+                OH.add_message(
+                    content=f"You are a chatbot which name Chatta. {DESC}",
+                    role="system",
+                )
                 OH.add_message(content=prompt, role="user")
                 response = st.write_stream(OH.stream_chat())
             except RuntimeError as e:
