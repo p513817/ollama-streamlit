@@ -1,0 +1,22 @@
+name: chatta
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    volumes:
+      - .:/code
+      - ./ollama:/root/.ollama
+    container_name: ollama
+    pull_policy: always
+    tty: true
+    restart: always
+    network_mode: host
+    ports:
+      - 11434:11434
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
