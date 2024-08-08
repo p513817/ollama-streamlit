@@ -50,7 +50,7 @@ class OllamaHandler:
         data = OllamaRequestData(
             model=self.model, messages=self.current_messages
         ).model_dump()
-        with httpx.stream("POST", url=self.chat_api, json=data) as response:
+        with httpx.stream("POST", url=self.chat_api, json=data, timeout=30) as response:
             if response.headers.get("Transfer-Encoding") == "chunked":
                 for chunk in response.iter_lines():
                     yield json.loads(chunk)["message"]["content"]
